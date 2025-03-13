@@ -13,7 +13,7 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) {
-        // Creates an empty StackPane for the new window. This can also be accomplished by loading an FXML file.
+        // Creates an empty StackPane for the window's format. This can also be accomplished by loading an FXML file.
         StackPane root = new StackPane();
         Scene scene = new Scene(root, 640, 480);
         
