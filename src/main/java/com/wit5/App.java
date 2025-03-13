@@ -1,37 +1,32 @@
 package com.wit5;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
-/**
- * JavaFX App
- */
 public class App extends Application {
 
-    private static Scene scene;
-
+    /**
+     * All initialization should be done in this method.
+     */
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+    public void start(Stage stage) {
+        // Creates an empty StackPane for the new window. This can also be accomplished by loading an FXML file.
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 640, 480);
+        
+        stage.setTitle("Basic Window");
         stage.setScene(scene);
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
+    /**
+     * Our main function, entry point of the application
+     */
     public static void main(String[] args) {
+        // API call to create the window, results in the start() method being called.
         launch();
     }
 
