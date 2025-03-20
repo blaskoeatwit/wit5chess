@@ -1,7 +1,7 @@
 package com.wit5;
 
 public abstract class Piece {
-	
+
 	final private String name;
 	private int x,y;
 	final private boolean white;
@@ -39,6 +39,12 @@ public abstract class Piece {
 		setY(y);
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public abstract void movePiece();
+	
+	public abstract void getMoves();
 
 }
