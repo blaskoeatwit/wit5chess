@@ -10,7 +10,6 @@ public class Bishop extends Piece {
         if (isValidMove(newX, newY)) {
             this.x = newX;
             this.y = newY;
-            // ChessBoard.updatePiecePosition(this, newX, newY);
         }
     }
 

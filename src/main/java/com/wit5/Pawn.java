@@ -14,13 +14,12 @@ public class Pawn extends Piece {
             this.x = newX;
             this.y = newY;
             firstMove = false; 
-            // ChessBoard.updatePiecePosition(this, newX, newY);
         }
     }
 
     @Override
     public boolean isValidMove(int newX, int newY) {
-        int direction = white ? -1 : 1; 
+        int direction = isWhite ? -1 : 1; 
 
         if (newX == this.x && newY == this.y + direction) { 
             return true;
@@ -32,10 +31,12 @@ public class Pawn extends Piece {
 
     //En Passant 
     private boolean canEnPassant(int newX, int newY, Piece[][] board, int lastPawnMoveX, int lastPawnMoveY) {
-        if (Math.abs(newX - this.x) != 1 || newY - this.y != (white ? -1 : 1)) return false;
+        if (Math.abs(newX - this.x) != 1 || newY - this.y != (isWhite ? -1 : 1)) return false;
     
         Piece adjacentPawn = board[newX][this.y];
-        if (adjacentPawn instanceof Pawn && adjacentPawn.white != this.white) {
+        // This isn't technically correct, en passant can only happen when the adjacent pawn moved twice on it's first move.
+        // Consider replacing firstMove with a move counter?
+        if (adjacentPawn instanceof Pawn && adjacentPawn.isWhite != isWhite) {
             return lastPawnMoveX == newX && lastPawnMoveY == this.y;
         }
         return false;
@@ -43,12 +44,13 @@ public class Pawn extends Piece {
     
     //Promotion
     private void checkPromotion(Piece[][] board) {
-        if ((white && y == 0) || (!white && y == 7)) {
+        if ((isWhite && y == 0) || (!isWhite && y == 7)) {
             System.out.println("Pawn Promotion! Choose: Q, R, B, N");
     
          
-            board[x][y] = new Queen(x, y, white);
+            board[x][y] = new Queen(x, y, isWhite);
         }
     }
+
 }
 

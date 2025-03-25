@@ -2,6 +2,7 @@
 package com.wit5;
 // JavaFX Functional
 public class Rook extends Piece {
+    protected boolean hasMoved = false;
     public Rook(int x, int y, boolean white) {
         super("Rook", x, y, white);
     }
@@ -11,7 +12,6 @@ public class Rook extends Piece {
         if (isValidMove(newX, newY)) {
             this.x = newX;
             this.y = newY;
-            // ChessBoard.updatePiecePosition(this, newX, newY); 
         }
     }
 

@@ -1,35 +1,28 @@
 package com.wit5;
-//Java FX 
+
 public abstract class Piece {
     protected int x, y; 
-    protected boolean white;
+    protected boolean isWhite;
     protected String name;
-    protected boolean hasMoved = false;
 
-    public Piece(String name, int x, int y, boolean white) {
+    public Piece(String name, int x, int y, boolean isWhite) {
         this.name = name;
         this.x = x;
         this.y = y;
-        this.white = white;
+        this.isWhite = isWhite;
     }
 
     public abstract void movePiece(int newX, int newY); 
-    public abstract boolean isValidMove(int newX, int newY); 
+    public abstract boolean isValidMove(int newX, int newY);
+
+    // Ezra thinks it would be a better idea if this method was implemented in the Board class
+    // If someone disagrees, lmk and we can figure out what's what
+    // public abstract boolean isPathClear(Board board, int newX, int newY);
 
     public int getX() { return x; }
     public int getY() { return y; }
     public String getName() { return name; }
+    public boolean isWhite() { return isWhite; }
     
 }
 
-// Move to board
-//Sanity Check 
-// public boolean isValidMove(int newX, int newY, Piece[][] board) {
- 
-//     if (newX < 0 || newX > 7 || newY < 0 || newY > 7) return false;
-    
-  
-//     if (board[newX][newY] != null && board[newX][newY].white == this.white) return false;
-    
-//     return true; 
-// }
