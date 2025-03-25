@@ -1,50 +1,35 @@
 package com.wit5;
-
+//Java FX 
 public abstract class Piece {
+    protected int x, y; 
+    protected boolean white;
+    protected String name;
+    protected boolean hasMoved = false;
 
-	final private String name;
-	private int x,y;
-	final private boolean white;
+    public Piece(String name, int x, int y, boolean white) {
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.white = white;
+    }
 
-	public Piece(String name, int x, int y, boolean white) {
-		this.name=name;
-		this.x=x;
-		this.y=y;
-		this.white=white;
-		
-	}
-	
-	public int getX() {
-		return this.x;
-	}
-	
-	public int getY() {
-		return this.y;
-	}
-	
-	final public boolean getTeam() {
-		return this.white;
-	}
-	
-	public void setX(int x) {
-		this.x=x;
-	}
-	
-	public void setY(int y) {
-		this.y=y;
-	}
-	
-	public void setPos(int x, int y) {
-		setX(x);
-		setY(y);
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public abstract void movePiece();
-	
-	public abstract void getMoves();
+    public abstract void movePiece(int newX, int newY); 
+    public abstract boolean isValidMove(int newX, int newY); 
 
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public String getName() { return name; }
+    
 }
+
+// Move to board
+//Sanity Check 
+// public boolean isValidMove(int newX, int newY, Piece[][] board) {
+ 
+//     if (newX < 0 || newX > 7 || newY < 0 || newY > 7) return false;
+    
+  
+//     if (board[newX][newY] != null && board[newX][newY].white == this.white) return false;
+    
+//     return true; 
+// }
