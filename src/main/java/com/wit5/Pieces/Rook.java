@@ -1,5 +1,5 @@
 
-package com.wit5;
+package com.wit5.Pieces;
 // JavaFX Functional
 public class Rook extends Piece {
     protected boolean hasMoved = false;

@@ -1,5 +1,5 @@
 /// Javafx functional 
-package com.wit5;
+package com.wit5.Pieces;
 
 import java.util.Scanner;
 

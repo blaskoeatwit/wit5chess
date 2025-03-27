@@ -1,6 +1,6 @@
 
 // JavaFX functional 
-package com.wit5;
+package com.wit5.Pieces;
 
 public class Knight extends Piece {
     public Knight(int x, int y, boolean white) {
