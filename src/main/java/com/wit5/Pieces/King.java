@@ -1,7 +1,7 @@
 
 
 /////// JavaFx Functional
-package com.wit5;
+package com.wit5.Pieces;
 
 public class King extends Piece {
     protected boolean hasMoved = false;

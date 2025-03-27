@@ -1,6 +1,7 @@
 package com.wit5;
 
 import javafx.scene.layout.Pane;
+import com.wit5.Pieces.Piece;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

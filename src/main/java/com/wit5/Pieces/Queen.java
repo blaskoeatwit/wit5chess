@@ -1,7 +1,7 @@
 
 
 // JavaFX Functional 
-package com.wit5;
+package com.wit5.Pieces;
 
 public class Queen extends Piece {
     public Queen(int x, int y, boolean white) {

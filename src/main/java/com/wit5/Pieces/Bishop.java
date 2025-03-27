@@ -1,4 +1,4 @@
-package com.wit5;
+package com.wit5.Pieces;
 // JavaFX functional 
 public class Bishop extends Piece {
     public Bishop(int x, int y, boolean white) {
