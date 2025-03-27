@@ -15,14 +15,14 @@ public abstract class Piece {
     public abstract void movePiece(int newX, int newY); 
     public abstract boolean isValidMove(int newX, int newY);
 
-    // Ezra thinks it would be a better idea if this method was implemented in the Board class
-    // If someone disagrees, lmk and we can figure out what's what
-    // public abstract boolean isPathClear(Board board, int newX, int newY);
-
     public int getX() { return x; }
     public int getY() { return y; }
     public String getName() { return name; }
     public boolean isWhite() { return isWhite; }
     
+    public javafx.scene.image.Image getImage() {
+        String colorPrefix = isWhite ? "White" : "Black";
+        String imagePath = "file:src/main/java/Resources/" + colorPrefix + name + ".png.png";
+        return new javafx.scene.image.Image(imagePath);
+    }
 }
-
