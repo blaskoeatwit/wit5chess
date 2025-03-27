@@ -4,6 +4,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 
 
 public class VisualBoard extends Pane {
@@ -15,18 +18,16 @@ public class VisualBoard extends Pane {
     private double startY;
     private Rectangle selectedSquareHighlight;
     private Cell selectedCell;
-    private javafx.scene.image.ImageView boardView;
+    private ImageView boardView;
 
 
     public VisualBoard(Scene scene) {
+        boardView = new ImageView(new Image("file:src/main/java/Resources/tempTestBoard.png"));
+        
         selectedSquareHighlight = new Rectangle();
         selectedSquareHighlight.setVisible(false);
         // Translucent red
         selectedSquareHighlight.setFill(Color.RED.deriveColor(0, 1, 1, 0.5));
-        
-        javafx.scene.image.Image boardImage = new javafx.scene.image.Image(
-            "file:src/main/java/Resources/tempTestBoard.png");
-        boardView = new javafx.scene.image.ImageView(boardImage);
         
         // Add to the scene
         getChildren().add(boardView);
@@ -50,22 +51,22 @@ public class VisualBoard extends Pane {
         startY = (height - boardSize) / 2;
         
         // Update the board image size and position
-        // Set both width and height to ensure consistent sizing
         boardView.setFitWidth(boardSize);
         boardView.setFitHeight(boardSize);
         boardView.setX(startX);
         boardView.setY(startY);
         
-        // Update highlight dimensions
+        // Update highlight size
         selectedSquareHighlight.setWidth(squareSize);
         selectedSquareHighlight.setHeight(squareSize);
-        // Only update the highlight position if a cell is selected
+        // Only update the highlight position if a cell is selected (otherwise no point)
         if (selectedCell != null) {
             selectedSquareHighlight.setLayoutX(startX + selectedCell.x() * squareSize);
             selectedSquareHighlight.setLayoutY(startY + selectedCell.y() * squareSize);
         }
     }
 
+    // The double position check exists because I was occasionally getting (rounding) errors which led to cells outside the board being selected
     private Cell cellAt(double sceneX, double sceneY) {
         if (sceneX < startX || sceneX > startX + boardSize || 
             sceneY < startY || sceneY > startY + boardSize) {
