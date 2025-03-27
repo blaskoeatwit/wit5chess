@@ -1,4 +1,4 @@
-package com.wit5;
+package com.wit5.Pieces;
 
 public abstract class Piece {
     protected int x, y; 
