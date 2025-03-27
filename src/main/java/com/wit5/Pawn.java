@@ -1,6 +1,8 @@
 /// Javafx functional 
 package com.wit5;
 
+import java.util.Scanner;
+
 public class Pawn extends Piece {
     private boolean firstMove = true;
 
@@ -44,11 +46,24 @@ public class Pawn extends Piece {
     
     //Promotion
     private void checkPromotion(Piece[][] board) {
+        Scanner input = new Scanner(System.in);
         if ((isWhite && y == 0) || (!isWhite && y == 7)) {
-            System.out.println("Pawn Promotion! Choose: Q, R, B, N");
+            char c;
+        	do {
+        		System.out.print("Pawn Promotion! Choose: Q, R, B, K: ");
+        		c = Character.toUpperCase(input.next().charAt(0));
+        	} while (!(c=='Q'||c=='R'||c=='B'||c=='K'));
+        	switch (c) {
+            case 'Q': board[x][y] = new Queen(x, y, isWhite);
+            case 'R': board[x][y] = new Rook(x, y, isWhite);
+            case 'B': board[x][y] = new Bishop(x, y, isWhite);
+            case 'K': board[x][y] = new Knight(x, y, isWhite);
+            
+            
+            }
     
          
-            board[x][y] = new Queen(x, y, isWhite);
+            
         }
     }
 
