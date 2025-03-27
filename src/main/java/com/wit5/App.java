@@ -17,12 +17,12 @@ public class App extends Application {
         stage.show();
 
         // Create the chess board
-        VisualBoard chessBoard = new VisualBoard(scene);
-        root.getChildren().add(chessBoard);
+        VisualBoard drawnBoard = new VisualBoard(scene);
+        root.getChildren().add(drawnBoard);
         
         // Update the visual board's selected cell when the user clicks
         scene.setOnMouseClicked(event -> {
-            chessBoard.selectCell(event.getSceneX(), event.getSceneY());
+            drawnBoard.selectCell(event.getSceneX(), event.getSceneY());
         });
 
     }
