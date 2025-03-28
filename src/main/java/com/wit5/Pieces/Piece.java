@@ -22,7 +22,7 @@ public abstract class Piece {
     
     public javafx.scene.image.Image getImage() {
         String colorPrefix = isWhite ? "White" : "Black";
-        String imagePath = "file:src/main/java/Resources/" + colorPrefix + name + ".png.png";
+        String imagePath = "file:src/main/java/Resources/" + colorPrefix + name + ".png";
         return new javafx.scene.image.Image(imagePath);
     }
 }
