@@ -5,31 +5,27 @@ import com.wit5.Pieces.Piece;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class VisualBoard extends Pane {
     record Cell(int x, int y) {}
 
-    private Pane pieceImages;
-    private Pane highlighted;
+    private Pane pieceImages = new Pane();
+    private Pane highlighted = new Pane();
     private ImageView boardView;
 
-    public VisualBoard(Scene scene, LogicBoard board) {
-        // Initialize board image
+    public VisualBoard(Scene scene) {
+        resizeBoard(scene.getWidth(), scene.getHeight());
+
         boardView = new ImageView(new Image("file:src/main/java/Resources/tempTestBoard.png"));
         boardView.fitWidthProperty().bind(widthProperty());
         boardView.fitHeightProperty().bind(heightProperty());
-        
-        pieceImages = new Pane();
-        highlighted = new Pane();
         
         getChildren().add(boardView);
         getChildren().add(highlighted);
         getChildren().add(pieceImages);
 
-        // Set initial board size and set piece draws
-        resizeBoard(scene.getWidth(), scene.getHeight());
-        updatePieceDraws(board);
-        
         // Set up resize listeners
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
             resizeBoard(newVal.doubleValue(), scene.getHeight());
@@ -45,6 +41,22 @@ public class VisualBoard extends Pane {
         // Center board on screen
         setLayoutX(width / 2 - boardSize / 2);
         setLayoutY(height / 2 - boardSize / 2);
+    }
+
+    public void highlightCells(Cell[] cells, Color colors[]) {
+        highlighted.getChildren().clear();
+        for (int i = 0; i < cells.length; i++) {
+            Cell cell = cells[i];
+            final int x = cell.x;
+            final int y = cell.y;
+            Rectangle rect = new Rectangle();
+            rect.widthProperty().bind(widthProperty().divide(8));
+            rect.heightProperty().bind(heightProperty().divide(8));
+            rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
+            rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
+            rect.setFill(colors[i].deriveColor(0, 1, 1, 0.5));
+            highlighted.getChildren().add(rect);
+        }
     }
 
     public void updatePieceDraws(LogicBoard board) {
