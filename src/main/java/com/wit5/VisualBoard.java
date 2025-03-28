@@ -43,8 +43,8 @@ public class VisualBoard extends Pane {
         setLayoutY(height / 2 - boardSize / 2);
     }
 
-    public void highlightCells(Cell[] cells, Color colors[]) {
-        highlighted.getChildren().clear();
+    public void highlightCells(Cell[] cells, Color colors[], boolean removeOld) {
+        if (removeOld) { highlighted.getChildren().clear(); }
         for (int i = 0; i < cells.length; i++) {
             Cell cell = cells[i];
             final int x = cell.x;
