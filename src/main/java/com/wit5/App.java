@@ -22,7 +22,7 @@ public class App extends Application {
         
         // Update the visual board's selected cell when the user clicks
         scene.setOnMouseClicked(event -> {
-            drawnBoard.selectCell(event.getSceneX(), event.getSceneY());
+            // drawnBoard.selectCell(event.getSceneX(), event.getSceneY());
         });
 
     }

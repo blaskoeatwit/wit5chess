@@ -4,7 +4,6 @@ import javafx.scene.layout.Pane;
 import com.wit5.Pieces.Piece;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -16,39 +15,34 @@ public class VisualBoard extends Pane {
     private double startX;
     private double startY;
     private Pane pieceImages;
-    private Rectangle selectedSquareHighlight;
-    private Cell selectedCell;
+    private Pane highlighted;
     private ImageView boardView;
 
 
     public VisualBoard(Scene scene) {
         boardView = new ImageView(new Image("file:src/main/java/Resources/tempTestBoard.png"));
         
-        selectedSquareHighlight = new Rectangle();
-        selectedSquareHighlight.setVisible(false);
-        // Translucent red
-        selectedSquareHighlight.setFill(Color.RED.deriveColor(0, 1, 1, 0.5));
-        
         pieceImages = new Pane();
+        highlighted = new Pane();
         
         // Add to the scene
         getChildren().add(boardView);
-        getChildren().add(selectedSquareHighlight);
+        getChildren().add(highlighted);
         getChildren().add(pieceImages);
 
         // Set initial position
-        updateBoard(scene.getWidth(), scene.getHeight());
+        resizeBoard(scene.getWidth(), scene.getHeight());
         
         // Set up resize listeners
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-            updateBoard(newVal.doubleValue(), scene.getHeight());
+            resizeBoard(newVal.doubleValue(), scene.getHeight());
         });
         scene.heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateBoard(scene.getWidth(), newVal.doubleValue());
+            resizeBoard(scene.getWidth(), newVal.doubleValue());
         });
     }
 
-    public void updateBoard(double width, double height) {
+    public void resizeBoard(double width, double height) {
         boardSize = Math.min(width, height) * 0.8;
         squareSize = boardSize / 8;
         startX = (width - boardSize) / 2;
@@ -60,20 +54,20 @@ public class VisualBoard extends Pane {
         boardView.setX(startX);
         boardView.setY(startY);
 
+        // Update piece sizes
+        // for (Node child : pieceImages.getChildren()) {
+        //     child.setLayoutX(startX + (int) child.getLayoutX() * squareSize);
+        //     child.setLayoutY(startY + (int) child.getLayoutY() * squareSize);
+        //     child.setFitHeight(squareSize);
+        // }
+        placePieceRenders(new LogicBoard());
+
         // Update piece renders
-        updatePieceRenders(new LogicBoard());
+        // updatePieceRenders(board);
         
-        // Update highlight size
-        selectedSquareHighlight.setWidth(squareSize);
-        selectedSquareHighlight.setHeight(squareSize);
-        // Only update the highlight position if a cell is selected (otherwise no point)
-        if (selectedCell != null) {
-            selectedSquareHighlight.setLayoutX(startX + selectedCell.x() * squareSize);
-            selectedSquareHighlight.setLayoutY(startY + selectedCell.y() * squareSize);
-        }
     }
 
-    public void updatePieceRenders(LogicBoard board) {
+    public void placePieceRenders(LogicBoard board) {
         // Remove all pieces from the board
         pieceImages.getChildren().clear();
 
@@ -88,16 +82,12 @@ public class VisualBoard extends Pane {
                     // Set the size of the piece image
                     pieceView.setFitHeight(squareSize);
                     
-                    // Need to add to scene graph temporarily to calculate bounds
+                    // Need to add early to get bounds
                     pieceImages.getChildren().add(pieceView);
-                    
-                    // Get the actual width after setting the height (preserving ratio)
                     double pieceWidth = pieceView.getBoundsInLocal().getWidth();
                     
                     // Position the piece on the board (centered in the square)
-                    // Center horizontally: add half of the remaining space in the square
                     pieceView.setLayoutX(startX + x * squareSize + (squareSize - pieceWidth) / 2);
-                    // Center vertically: add half of the remaining space in the square
                     pieceView.setLayoutY(startY + y * squareSize);
                 }
             }
@@ -118,20 +108,4 @@ public class VisualBoard extends Pane {
         return new Cell(x, y);
     }
 
-    public void selectCell(double x, double y) {
-        Cell cell = cellAt(x, y);
-        if (cell == null || cell.equals(selectedCell)) {
-            selectedSquareHighlight.setVisible(false);
-            selectedCell = null;
-            return;
-        }
-        selectedCell = cell;
-        selectedSquareHighlight.setVisible(true);
-        selectedSquareHighlight.setLayoutX(startX + cell.x() * squareSize);
-        selectedSquareHighlight.setLayoutY(startY + cell.y() * squareSize);
-    }
-
-    public Cell getSelectedCell() {
-        return selectedCell;
-    }
 }
