@@ -105,7 +105,7 @@ public class VisualBoard extends Pane {
     }
 
     // The double position check exists because I was occasionally getting (rounding) errors which led to cells outside the board being selected
-    private Cell cellAt(double sceneX, double sceneY) {
+    public Cell cellAt(double sceneX, double sceneY) {
         if (sceneX < startX || sceneX > startX + boardSize || 
             sceneY < startY || sceneY > startY + boardSize) {
             return null;
