@@ -72,7 +72,7 @@ public class LogicBoard {
             Piece target_square = getCell(x2, y2);
             if (target_square != null && target_square.isWhite() == piece.isWhite()) return false;
 
-            if (!isPathClear(x1, y1, x2, y2)) return false;
+            if (!(piece instanceof Knight) && !isPathClear(x1, y1, x2, y2)) return false;
         } catch (IndexOutOfBoundsException e) { return false; }
 
         return true;
