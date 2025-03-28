@@ -2,6 +2,7 @@ package com.wit5;
 
 import javafx.scene.layout.Pane;
 import com.wit5.Pieces.Piece;
+import com.wit5.BoardManager.Cell;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,8 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class VisualBoard extends Pane {
-    record Cell(int x, int y) {}
-
     private Pane pieceImages = new Pane();
     private Pane highlighted = new Pane();
     private ImageView boardView;
@@ -43,20 +42,21 @@ public class VisualBoard extends Pane {
         setLayoutY(height / 2 - boardSize / 2);
     }
 
-    public void highlightCells(Cell[] cells, Color colors[], boolean removeOld) {
-        if (removeOld) { highlighted.getChildren().clear(); }
-        for (int i = 0; i < cells.length; i++) {
-            Cell cell = cells[i];
-            final int x = cell.x;
-            final int y = cell.y;
-            Rectangle rect = new Rectangle();
-            rect.widthProperty().bind(widthProperty().divide(8));
-            rect.heightProperty().bind(heightProperty().divide(8));
-            rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
-            rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
-            rect.setFill(colors[i].deriveColor(0, 1, 1, 0.5));
-            highlighted.getChildren().add(rect);
-        }
+    public void removeHighlights() {
+        highlighted.getChildren().clear();
+    }
+
+    public void highlightCell(Cell cell, Color color) {
+        if (cell == null) { return; }
+        final int x = cell.x();
+        final int y = cell.y();
+        Rectangle rect = new Rectangle();
+        rect.widthProperty().bind(widthProperty().divide(8));
+        rect.heightProperty().bind(heightProperty().divide(8));
+        rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
+        rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
+        rect.setFill(color.deriveColor(0, 1, 1, 0.25));
+        highlighted.getChildren().add(rect);
     }
 
     public void updatePieceDraws(LogicBoard board) {

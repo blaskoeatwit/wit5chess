@@ -1,5 +1,4 @@
 package com.wit5;
-
 import com.wit5.Pieces.*;
 
 public class LogicBoard {
@@ -9,11 +8,7 @@ public class LogicBoard {
     
     public LogicBoard() {
         board = new Piece[8][8];
-        initializeBoard();
-    }
 
-    /// Initializes the board with pieces in their starting positions
-    private void initializeBoard() {
         // Set up pawns
         for (int i = 0; i < 8; i++) {
             board[i][1] = new Pawn(i, 1, false); // Black pawns
@@ -47,33 +42,24 @@ public class LogicBoard {
         board[4][7] = new King(4, 7, true);
     }
 
-    /// Returns true if it is white's turn, false otherwise
     public boolean isWhiteTurn() { return isWhiteTurn; }
 
-    /// Returns the current piece stored in the cell
-    /// Assumes valid cell coordinates
     public Piece getCell(int x, int y) throws IndexOutOfBoundsException {
         return board[x][y];
     }
-
-    /// Returns the old piece stored in the cell
-    /// Assumes valid cell coordinates
     private Piece setCell(int x, int y, Piece piece) throws IndexOutOfBoundsException {
         Piece oldPiece = board[x][y];
         board[x][y] = piece;
         return oldPiece;
     }
 
-
-    // Consider replacing the boolean return with a custom error
-    /// Returns false if the move failed, true otherwise
+    /// Returns false if move failed, true otherwise
     public boolean attemptMove(int x1, int y1, int x2, int y2) {
         if (!isValidMove(x1, y1, x2, y2)) return false;
         makeMove(x1, y1, x2, y2);
         return true;
     }
 
-    /// Returns false if the move is invalid, true otherwise 
     public boolean isValidMove(int x1, int y1, int x2, int y2) {
         try {
             // Bound validation occurs through the thrown error
@@ -86,7 +72,6 @@ public class LogicBoard {
             Piece target_square = getCell(x2, y2);
             if (target_square != null && target_square.isWhite() == piece.isWhite()) return false;
 
-            // Bound validation technically also occurs here, but if neither getCell throws this won't either
             if (!isPathClear(x1, y1, x2, y2)) return false;
         } catch (IndexOutOfBoundsException e) { return false; }
 
@@ -107,12 +92,12 @@ public class LogicBoard {
         return true;
     }
 
-
     /// THE FOLLOWING LOGIC DOES NOT WORK FOR EN PASSANT OR CASTLING!!!
     /// THIS FUNCTION MUST BE UPDATED
     /// Assumes move was already validated.
     private void makeMove(int x1, int y1, int x2, int y2) {
         Piece piece = getCell(x1, y1);
+        piece.movePiece(x2, y2);
         // Storing the piece being captured in case we want to do something with that data in the future
         Piece target = getCell(x2, y2);
         setCell(x1, y1, null);

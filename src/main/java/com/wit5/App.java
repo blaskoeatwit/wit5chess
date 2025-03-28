@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import com.wit5.VisualBoard.Cell;
 
 
 public class App extends Application {
@@ -16,18 +15,7 @@ public class App extends Application {
         stage.setTitle("Chess Board");
         stage.setScene(scene);
         stage.show();
-
-        // Create the chess board
-        BoardManager boardManager = new BoardManager(scene);
-        root.getChildren().add(boardManager.visualBoard);
-        
-        // Update the visual board's selected cell when the user clicks
-        scene.setOnMouseClicked(event -> {
-            Cell cell = boardManager.visualBoard.cellAt(event.getSceneX(), event.getSceneY());
-            if (cell == null) { return; }
-            System.out.println(cell);
-        });
-
+        BoardManager boardManager = new BoardManager(root, scene);
     }
     
     public static void main(String[] args) {
