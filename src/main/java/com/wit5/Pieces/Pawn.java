@@ -10,12 +10,14 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public Piece copy() { return new Pawn(this.curCell, this.isWhite); }
+    
     public boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
         Piece target = board.getCell(newCell);
         if (target == null) {
             if (validEnPassant(board, newCell)) return true;
             if (validWalk(newCell)) return true;
-            if (moveCount == 0 && validJump(newCell)) return true;
+            if (moveCount == 0 && validJump(newCell) && board.isPathClear(curCell, newCell)) return true;
         } else if (target.isWhite() != this.isWhite()) {
             if (validCapture(newCell)) return true;
         }

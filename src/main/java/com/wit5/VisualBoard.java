@@ -7,11 +7,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class VisualBoard extends Pane {
     private Pane pieceImages = new Pane();
     private Pane highlighted = new Pane();
     private Pane promotionOptions = new Pane();
+    private Pane gameOverScreen = new Pane();
     private ImageView boardView;
 
     public VisualBoard(Scene scene) {
@@ -25,6 +33,7 @@ public class VisualBoard extends Pane {
         getChildren().add(highlighted);
         getChildren().add(pieceImages);
         getChildren().add(promotionOptions);
+        getChildren().add(gameOverScreen);
 
         // Set up resize listeners
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -125,5 +134,54 @@ public class VisualBoard extends Pane {
         int y = (int) Math.floor((sceneY - startY) / squareSize);
         return new Cell(x, y);
     }
-
+    
+    public void showGameOverScreen(boolean isWhiteWinner, boolean isCheckmate) {
+        gameOverScreen.getChildren().clear();
+        
+        // Overlay
+        Rectangle overlay = new Rectangle();
+        overlay.widthProperty().bind(widthProperty());
+        overlay.heightProperty().bind(heightProperty());
+        overlay.setFill(Color.BLACK.deriveColor(0, 1, 1, 0.7));
+        
+        // Aligned word box
+        VBox messageBox = new VBox(15);
+        messageBox.setAlignment(Pos.CENTER);
+        messageBox.layoutXProperty().bind(widthProperty().divide(2).subtract(150));
+        messageBox.layoutYProperty().bind(heightProperty().divide(2).subtract(100));
+        messageBox.setPrefWidth(300);
+        messageBox.setPrefHeight(200);
+        
+        Label gameOverLabel = new Label("GAME OVER");
+        gameOverLabel.setFont(new Font("Arial", 30));
+        gameOverLabel.setTextFill(Color.WHITE);
+        
+        String gameEndText;
+        if (isCheckmate) {
+            String winner = isWhiteWinner ? "White" : "Black";
+            gameEndText = winner + " wins!";
+        } else gameEndText = "Stalemate!";
+        Label checkmateLabel = new Label(gameEndText);
+        checkmateLabel.setFont(new Font("Arial", 24));
+        checkmateLabel.setTextFill(isCheckmate ? Color.WHITE : Color.GRAY);
+        
+        Button newGameButton = new Button("New Game");
+        newGameButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20 10 20;");
+        newGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Send message to board manager
+                if (onNewGameRequest != null) onNewGameRequest.run();
+            }
+        });
+        
+        messageBox.getChildren().addAll(gameOverLabel, checkmateLabel,  newGameButton);
+        
+        gameOverScreen.getChildren().addAll(overlay, messageBox);
+    }
+    
+    private Runnable onNewGameRequest;
+    public void setOnNewGameRequest(Runnable callback) { this.onNewGameRequest = callback; }
+    public void removeGameOverScreen() { gameOverScreen.getChildren().clear(); }
+    
 }

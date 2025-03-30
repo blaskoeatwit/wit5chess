@@ -7,6 +7,9 @@ public class Rook extends Piece {
     public Rook(Cell curCell, boolean white) { super("Rook", curCell, white); }
 
     @Override
+    public Piece copy() { return new Rook(this.curCell, this.isWhite); }
+
+    @Override
     public boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
         Piece target = board.getCell(newCell);
         if (target != null && target.isWhite() == this.isWhite()) return false;

@@ -13,12 +13,20 @@ public abstract class Piece {
         this.curCell = curCell;
         this.isWhite = isWhite;
     }
+    
+    public abstract Piece copy();
+    protected Piece(String name, Cell curCell, boolean isWhite, int moveCount) {
+        this.name = name;
+        this.curCell = curCell;
+        this.isWhite = isWhite;
+        this.moveCount = moveCount;
+    }
+    
     public String getName() { return name; }
     public boolean isWhite() { return isWhite; }
     public boolean hasMoved() { return moveCount > 0; }
 
     public abstract boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException;
-
     public boolean move(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
         if (!legalMove(board, newCell)) return false;
         board.setCell(newCell, this);
@@ -27,7 +35,6 @@ public abstract class Piece {
         moveCount++;
         return true;
     }
-
     
     public javafx.scene.image.Image getImage() {
         String colorPrefix = isWhite ? "White" : "Black";

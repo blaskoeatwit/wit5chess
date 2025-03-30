@@ -6,6 +6,9 @@ public class King extends Piece {
 
     public King(Cell curCell, boolean white) { super("King", curCell, white); }
 
+    @Override
+    public Piece copy() { return new King(this.curCell, this.isWhite); }
+
     // Returns the cell of the rook used during the castle, or null if castle is invalid
     private Cell castlingRook(LogicBoard board, Cell newCell) { 
         if (!this.hasMoved() && newCell.y() == curCell.y()) {

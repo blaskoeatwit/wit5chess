@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-// Handles all interactions between the javafx visuals and the backend board classes
+// Handles all interactions between the javafx visuals and the backend LogicBoard
 public class BoardManager {
     // Base colors for highlights
     public static final Color selectionColor = Color.BLACK;
@@ -21,22 +21,28 @@ public class BoardManager {
     private Cell selectedCell;
     private boolean awaitingPromotion = false;
     private Cell promotionCell = null;
+    private boolean gameOver = false;
     
     public BoardManager(Pane root, Scene scene) {
         logicBoard = new LogicBoard();
         visualBoard = new VisualBoard(scene);
         visualBoard.updatePieceDraws(logicBoard);
         root.getChildren().add(visualBoard);
+        
+        visualBoard.setOnNewGameRequest(() -> resetGame());
 
+        // Start mouse listener
         scene.setOnMouseClicked(event -> {
-            // If awaiting promotion, check if a promotion piece was clicked
+            // No interacting with the board while on game over screen
+            if (gameOver) return;
+            // Don't let game progress until promotion is resolved
             if (awaitingPromotion) {
                 handlePromotionSelection(event.getSceneX(), event.getSceneY());
                 return;
             }
             
-            // Otherwise handle normal cell selection
             if (selectCell(event.getSceneX(), event.getSceneY())) {
+                // Check for pawn promotion
                 if (logicBoard.lastMove().y() == 0 || logicBoard.lastMove().y() == 7) {
                     if (logicBoard.getCell(logicBoard.lastMove()) instanceof Pawn) {
                         promotionCell = logicBoard.lastMove();
@@ -47,15 +53,23 @@ public class BoardManager {
                 }
                 visualBoard.updatePieceDraws(logicBoard);
             }
+            
+            // End game if checkmate
+            if (logicBoard.isCheckmate()) { 
+                visualBoard.showGameOverScreen(!logicBoard.isWhiteTurn(), true);
+                gameOver = true;
+            }
+            if (logicBoard.isStalemate()) {
+                visualBoard.showGameOverScreen(false, false);
+                gameOver = true;
+            }
         });
     }
 
     // Returns true if a move was made, false otherwise
     public boolean selectCell(double sceneX, double sceneY) {
         // If awaiting promotion, don't allow any other moves
-        if (awaitingPromotion) {
-            return false;
-        }
+        if (awaitingPromotion) return false;
         
         visualBoard.removeHighlights();
         Cell cell = visualBoard.cellAt(sceneX, sceneY);
@@ -149,6 +163,19 @@ public class BoardManager {
                 promotionCell = null;
             }
         }
+    }
+    
+    private void resetGame() {
+        logicBoard = new LogicBoard();
+        selectedCell = null;
+        awaitingPromotion = false;
+        promotionCell = null;
+        gameOver = false;
+        
+        visualBoard.removeGameOverScreen();
+        visualBoard.removeHighlights();
+        visualBoard.removePromotionOptions();
+        visualBoard.updatePieceDraws(logicBoard);
     }
 
 }

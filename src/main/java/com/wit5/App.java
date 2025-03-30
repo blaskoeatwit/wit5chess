@@ -5,14 +5,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-
 public class App extends Application {
     
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
         Scene scene = new Scene(root, 640, 480);
-        stage.setTitle("Chess Board");
+        stage.setTitle("Chess");
         stage.setScene(scene);
         stage.show();
         BoardManager boardManager = new BoardManager(root, scene);
