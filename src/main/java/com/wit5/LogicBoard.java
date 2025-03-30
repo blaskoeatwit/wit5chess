@@ -6,7 +6,7 @@ public class LogicBoard {
     // The 2D array representing the board, board[x][y] is the piece at (x, y)
     public Piece[][] board;
     private boolean isWhiteTurn = true;
-    public Cell lastMove = new Cell(0, 0);
+    public Cell lastMove = null;
     
     public LogicBoard() {
         board = new Piece[8][8];
@@ -46,7 +46,8 @@ public class LogicBoard {
 
     public void nextTurn() { isWhiteTurn = !isWhiteTurn; }
     public boolean isWhiteTurn() { return isWhiteTurn; }
-
+    public Cell lastMove() { return lastMove; }
+    
     public Piece getCell(Cell cell) throws IndexOutOfBoundsException {
         return board[cell.x()][cell.y()];
     }
@@ -55,6 +56,7 @@ public class LogicBoard {
         board[cell.x()][cell.y()] = piece;
         return oldPiece;
     }
+
 
     // Returns false if move failed, true otherwise
     public boolean attemptMove(Cell curCell, Cell newCell) throws IndexOutOfBoundsException {

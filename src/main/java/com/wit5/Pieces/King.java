@@ -46,21 +46,18 @@ public class King extends Piece {
         Cell rookCell = castlingRook(board, newCell);
         board.setCell(newCell, this);
         board.setCell(curCell, null);
-        curCell = newCell;
-        moveCount += 1;
         if (rookCell != null) {
-            int deltaX = newCell.x() - curCell.x();
-            Cell rookNewCell = new Cell(newCell.x() + Integer.signum(deltaX), newCell.y());
+            Cell rookNewCell = new Cell(newCell.x() - Integer.signum(newCell.x() - curCell.x()), newCell.y());
             Piece rook = board.getCell(rookCell);
+            board.setCell(rookNewCell, rook);
             rook.moveCount += 1;
             rook.curCell = rookNewCell;
-            board.setCell(rookNewCell, rook);
             board.setCell(rookCell, null);
         }
+        curCell = newCell;
+        moveCount += 1;
         return true;
     }
-
-
 
 }
 

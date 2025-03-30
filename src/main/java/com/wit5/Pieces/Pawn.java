@@ -36,6 +36,7 @@ public class Pawn extends Piece {
     }
 
     private boolean validEnPassant(LogicBoard board, Cell newCell) {
+        if (board.lastMove == null) return false;
         Cell behindLast = new Cell(board.lastMove.x(), board.lastMove.y() + forward);
         if (!validCapture(behindLast)) return false;
         if (!newCell.equals(behindLast)) return false;

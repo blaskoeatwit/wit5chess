@@ -42,9 +42,7 @@ public class VisualBoard extends Pane {
         setLayoutY(height / 2 - boardSize / 2);
     }
 
-    public void removeHighlights() {
-        highlighted.getChildren().clear();
-    }
+    public void removeHighlights() { highlighted.getChildren().clear(); }
 
     public void highlightCell(Cell cell, Color color) {
         if (cell == null) { return; }
@@ -55,7 +53,7 @@ public class VisualBoard extends Pane {
         rect.heightProperty().bind(heightProperty().divide(8));
         rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
         rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
-        rect.setFill(color.deriveColor(0, 1, 1, 0.25));
+        rect.setFill(color.deriveColor(0, 1, 1, 0.5));
         highlighted.getChildren().add(rect);
     }
 
