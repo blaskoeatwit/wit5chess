@@ -1,20 +1,19 @@
 package com.wit5.Pieces;
-// JavaFX functional 
+import com.wit5.BoardManager.Cell;
+import com.wit5.LogicBoard;
+
 public class Bishop extends Piece {
-    public Bishop(int x, int y, boolean white) {
-        super("Bishop", x, y, white);
-    }
+    public Bishop(Cell curCell, boolean white) { super("Bishop", curCell, white); }
 
     @Override
-    public void movePiece(int newX, int newY) {
-        if (isValidMove(newX, newY)) {
-            this.x = newX;
-            this.y = newY;
-        }
-    }
+    public Piece copy() { return new Bishop(this.curCell, this.isWhite); }
 
     @Override
-    public boolean isValidMove(int newX, int newY) {
-        return Math.abs(newX - this.x) == Math.abs(newY - this.y);
+    public boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
+        Piece target = board.getCell(newCell);
+        if (target != null && target.isWhite() == this.isWhite()) return false;
+        if (!board.isPathClear(curCell, newCell)) return false;
+
+        return Math.abs(newCell.x() - curCell.x()) == Math.abs(newCell.y() - curCell.y());
     }
 }
