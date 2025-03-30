@@ -1,22 +1,17 @@
-
 package com.wit5.Pieces;
-// JavaFX Functional
+import com.wit5.BoardManager.Cell;
+import com.wit5.LogicBoard;
+
 public class Rook extends Piece {
     protected boolean hasMoved = false;
-    public Rook(int x, int y, boolean white) {
-        super("Rook", x, y, white);
-    }
+    public Rook(Cell curCell, boolean white) { super("Rook", curCell, white); }
 
     @Override
-    public void movePiece(int newX, int newY) {
-        if (isValidMove(newX, newY)) {
-            this.x = newX;
-            this.y = newY;
-        }
-    }
+    public boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
+        Piece target = board.getCell(newCell);
+        if (target != null && target.isWhite() == this.isWhite()) return false;
+        if (!board.isPathClear(curCell, newCell)) return false;
 
-    @Override
-    public boolean isValidMove(int newX, int newY) {
-        return newX == this.x || newY == this.y; 
+        return newCell.x() == curCell.x() ^ newCell.y() == curCell.y();
     }
 }

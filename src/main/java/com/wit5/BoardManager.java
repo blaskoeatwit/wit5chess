@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 // Handles all interactions between the javafx visuals and the backend board classes
 public class BoardManager {
-    record Cell(int x, int y) {}
+    public record Cell(int x, int y) {}
     
     private LogicBoard logicBoard;
     private VisualBoard visualBoard;
@@ -35,7 +35,7 @@ public class BoardManager {
         } 
         
         // If we click a valid cell and a piece is selected, attempt to move
-        if (selectedCell != null && logicBoard.attemptMove(selectedCell.x(), selectedCell.y(), cell.x(), cell.y())) {
+        if (selectedCell != null && logicBoard.attemptMove(selectedCell, cell)) {
             visualBoard.updatePieceDraws(logicBoard);
             selectedCell = null;
         } else { selectedCell = cell; } // Otherwise, select the clicked cell
@@ -45,8 +45,9 @@ public class BoardManager {
             visualBoard.highlightCell(selectedCell, Color.RED);
             for (int x = 0; x < 8; x++) {
                 for (int y = 0; y < 8; y++) {
-                    if (logicBoard.isValidMove(cell.x(), cell.y(), x, y)) {
-                        visualBoard.highlightCell(new Cell(x, y), Color.BLUE);
+                    Cell newCell = new Cell(x, y);
+                    if (logicBoard.isValidMove(selectedCell, newCell)) {
+                        visualBoard.highlightCell(newCell, Color.BLUE);
                     }
                 }
             }

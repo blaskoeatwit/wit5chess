@@ -63,7 +63,7 @@ public class VisualBoard extends Pane {
         pieceImages.getChildren().clear();
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                Piece piece = board.getCell(x, y);
+                Piece piece = board.getCell(new Cell(x, y));
                 if (piece != null) {
                     ImageView pieceView = new ImageView(piece.getImage());
                     pieceView.preserveRatioProperty().set(true);

@@ -1,45 +1,66 @@
-
-
-/////// JavaFx Functional
 package com.wit5.Pieces;
+import com.wit5.BoardManager.Cell;
+import com.wit5.LogicBoard;
 
 public class King extends Piece {
-    protected boolean hasMoved = false;
 
-    public King(int x, int y, boolean white) {
-        super("King", x, y, white);
-    }
+    public King(Cell curCell, boolean white) { super("King", curCell, white); }
 
-    @Override
-    public void movePiece(int newX, int newY) {
-        if (isValidMove(newX, newY)) {
-            this.x = newX;
-            this.y = newY;
+    // Returns the cell of the rook used during the castle, or null if castle is invalid
+    private Cell castlingRook(LogicBoard board, Cell newCell) { 
+        if (!this.hasMoved() && newCell.y() == curCell.y()) {
+            int deltaX = newCell.x() - curCell.x();
+            Cell rookCell;
+            Piece rook;
+            if (deltaX == 2) { // Kingside
+                rookCell = new Cell(7, curCell.y());
+                rook = board.getCell(rookCell);
+            } else if (deltaX == -2) { // Queenside
+                rookCell = new Cell(0, curCell.y());
+                rook = board.getCell(rookCell);
+            } else return null;
+
+            if (rook instanceof Rook && !rook.hasMoved() && board.isPathClear(curCell, rookCell)) {
+                return rookCell;
+            }
         }
+        return null;
     }
 
     @Override
-    public boolean isValidMove(int newX, int newY) {
-        return Math.abs(newX - this.x) <= 1 && Math.abs(newY - this.y) <= 1; 
+    public boolean legalMove(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
+        Piece target = board.getCell(newCell);
+        if (target != null && target.isWhite() == this.isWhite()) return false;
+        if (!board.isPathClear(curCell, newCell)) return false;
+
+        // Castling check
+        if (castlingRook(board, newCell) != null) return true;
+
+        // Normal movement
+        return (Math.abs(newCell.x() - curCell.x()) <= 1 && Math.abs(newCell.y() - curCell.y()) <= 1);
     }
 
-    // Castling Implementation
-    // Move into board
-    // public boolean canCastle(Piece[][] board, int newX, int newY) {
-    //     if (this.hasMoved || this.y != newY || (newX != 2 && newX != 6)) return false;
-    
-    //     int direction = (newX == 2) ? -1 : 1; 
-    //     int rookX = (newX == 2) ? 0 : 7;
-        
-    //     Piece rook = board[rookX][y];
-    //     if (!(rook instanceof Rook) || rook.hasMoved) return false;
-        
-        
-    //     for (int i = this.x + direction; i != rookX; i += direction) {
-    //         if (board[i][y] != null) return false;
-    //     }
-        
-    //     return true;
-    // }
+    @Override
+    public boolean move(LogicBoard board, Cell newCell) throws IndexOutOfBoundsException {
+        if (!legalMove(board, newCell)) return false;
+        Cell rookCell = castlingRook(board, newCell);
+        board.setCell(newCell, this);
+        board.setCell(curCell, null);
+        curCell = newCell;
+        moveCount += 1;
+        if (rookCell != null) {
+            int deltaX = newCell.x() - curCell.x();
+            Cell rookNewCell = new Cell(newCell.x() + Integer.signum(deltaX), newCell.y());
+            Piece rook = board.getCell(rookCell);
+            rook.moveCount += 1;
+            rook.curCell = rookNewCell;
+            board.setCell(rookNewCell, rook);
+            board.setCell(rookCell, null);
+        }
+        return true;
+    }
+
+
+
 }
 
