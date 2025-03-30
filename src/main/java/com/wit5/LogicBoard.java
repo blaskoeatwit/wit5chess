@@ -4,9 +4,9 @@ import com.wit5.BoardManager.Cell;
 
 public class LogicBoard {
     // The 2D array representing the board, board[x][y] is the piece at (x, y)
-    public Piece[][] board;
+    private Piece[][] board;
     private boolean isWhiteTurn = true;
-    public Cell lastMove = null;
+    private Cell lastMove = null;
     
     public LogicBoard() {
         board = new Piece[8][8];
@@ -47,7 +47,7 @@ public class LogicBoard {
     public void nextTurn() { isWhiteTurn = !isWhiteTurn; }
     public boolean isWhiteTurn() { return isWhiteTurn; }
     public Cell lastMove() { return lastMove; }
-    
+
     public Piece getCell(Cell cell) throws IndexOutOfBoundsException {
         return board[cell.x()][cell.y()];
     }
@@ -57,19 +57,15 @@ public class LogicBoard {
         return oldPiece;
     }
 
-
     // Returns false if move failed, true otherwise
     public boolean attemptMove(Cell curCell, Cell newCell) throws IndexOutOfBoundsException {
         Piece piece = getCell(curCell);
         if (piece == null) return false;
         if (piece.isWhite() != isWhiteTurn) return false;
-        if (piece.move(this, newCell)) {
-
-            lastMove = newCell;
-            nextTurn();
-            return true;
-        }
-        return false;
+        if (!piece.move(this, newCell)) return false;
+        lastMove = newCell;
+        nextTurn();
+        return true;
     }
 
     public boolean isValidMove(Cell curCell, Cell newCell) {
@@ -80,8 +76,7 @@ public class LogicBoard {
         return piece.legalMove(this, newCell);
     }
 
-    // Assumes the path forms a horizontal, vertical, or slope=+/-1 diagonal line
-    // (Basically don't call this function when moving the knight)
+    // Tests whether a path between two cells has pieces in the way
     public boolean isPathClear(Cell curCell, Cell newCell) {
         int signX = Integer.signum(newCell.x() - curCell.x());
         int signY = Integer.signum(newCell.y() - curCell.y());

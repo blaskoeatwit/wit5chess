@@ -1,5 +1,4 @@
 package com.wit5;
-
 import com.wit5.Pieces.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -12,6 +11,7 @@ public class BoardManager {
     public static final Color lastMoveColor = Color.BLUE;
     public static final Color validMoveColor = Color.GREEN;
     public static final Color captureColor = Color.RED;
+    public static final Color promotionColor = Color.GOLD;
     
     public record Cell(int x, int y) {}
     
@@ -79,8 +79,8 @@ public class BoardManager {
     }
 
     private void highlightLast() {
-        if (logicBoard.lastMove != null) {
-            visualBoard.highlightCell(logicBoard.lastMove, lastMoveColor);
+        if (logicBoard.lastMove() != null) {
+            visualBoard.highlightCell(logicBoard.lastMove(), lastMoveColor);
         }
     }
 
@@ -93,7 +93,7 @@ public class BoardManager {
                     Cell newCell = new Cell(x, y);
                     if (newCell.equals(selectedCell)) continue;
                     if (logicBoard.isValidMove(selectedCell, newCell)) {
-                        if (newCell.equals(logicBoard.lastMove)) { highlightLast = false; }
+                        if (newCell.equals(logicBoard.lastMove())) { highlightLast = false; }
                         if (logicBoard.getCell(newCell) != null) {
                             visualBoard.highlightCell(newCell, captureColor);
                         } else {
@@ -109,34 +109,26 @@ public class BoardManager {
     // Show promotion options above the cell
     private void showPromotionOptions(Cell cell) {
         visualBoard.removeHighlights();
-        
-        // Get the y position for promotion options (above the cell)
         int promotionY = cell.y() - (logicBoard.getCell(cell).isWhite() ? 1 : -1);
         
-        // Show promotion options centered around the pawn's position
-        // Two pieces on each side of the center of the promotion square
         visualBoard.showPromotionOption(new Cell(cell.x() - 1, promotionY), "Queen", logicBoard.getCell(cell).isWhite());
         visualBoard.showPromotionOption(new Cell(cell.x(), promotionY), "Rook", logicBoard.getCell(cell).isWhite());
         visualBoard.showPromotionOption(new Cell(cell.x() + 1, promotionY), "Bishop", logicBoard.getCell(cell).isWhite());
         visualBoard.showPromotionOption(new Cell(cell.x() + 2, promotionY), "Knight", logicBoard.getCell(cell).isWhite());
         
-        // Highlight the cell being promoted
-        visualBoard.highlightCell(cell, selectionColor);
+        visualBoard.highlightCell(cell, promotionColor);
     }
     
     // Handle promotion selection
     private void handlePromotionSelection(double sceneX, double sceneY) {
         Cell clickedCell = visualBoard.cellUnbounded(sceneX, sceneY);
         
-        // Get the y position for promotion options (above the cell)
         int promotionY = promotionCell.y() - (logicBoard.getCell(promotionCell).isWhite() ? 1 : -1);
         
-        // Check if one of the promotion options was clicked
         if (clickedCell.y() == promotionY) {
             boolean isWhite = logicBoard.getCell(promotionCell).isWhite();
             Piece newPiece = null;
             
-            // Determine which piece was selected based on x-coordinate
             if (clickedCell.x() == promotionCell.x() - 1) {
                 newPiece = new Queen(promotionCell, isWhite);
             } else if (clickedCell.x() == promotionCell.x()) {
@@ -147,7 +139,6 @@ public class BoardManager {
                 newPiece = new Knight(promotionCell, isWhite);
             }
             
-            // If a valid piece was selected, replace the pawn
             if (newPiece != null) {
                 logicBoard.setCell(promotionCell, newPiece);
                 visualBoard.removePromotionOptions();

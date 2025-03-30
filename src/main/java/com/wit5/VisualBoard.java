@@ -1,5 +1,4 @@
 package com.wit5;
-
 import javafx.scene.layout.Pane;
 import com.wit5.Pieces.Piece;
 import com.wit5.BoardManager.Cell;
@@ -46,9 +45,21 @@ public class VisualBoard extends Pane {
 
     public void removeHighlights() { highlighted.getChildren().clear(); }
     
+    public void highlightCell(Cell cell, Color color) {
+        if (cell == null) { return; }
+        final int x = cell.x();
+        final int y = cell.y();
+        Rectangle rect = new Rectangle();
+        rect.widthProperty().bind(widthProperty().divide(8));
+        rect.heightProperty().bind(heightProperty().divide(8));
+        rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
+        rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
+        rect.setFill(color.deriveColor(0, 1, 1, 0.5));
+        highlighted.getChildren().add(rect);
+    }
+
     public void removePromotionOptions() { promotionOptions.getChildren().clear(); }
     
-    // Display a promotion option at the specified cell
     public void showPromotionOption(Cell cell, String pieceName, boolean isWhite) {      
         // Create a background highlight for the promotion option
         Rectangle background = new Rectangle();
@@ -71,19 +82,6 @@ public class VisualBoard extends Pane {
         pieceView.layoutYProperty().bind(heightProperty().divide(8).multiply(cell.y()));
         
         promotionOptions.getChildren().add(pieceView);
-    }
-
-    public void highlightCell(Cell cell, Color color) {
-        if (cell == null) { return; }
-        final int x = cell.x();
-        final int y = cell.y();
-        Rectangle rect = new Rectangle();
-        rect.widthProperty().bind(widthProperty().divide(8));
-        rect.heightProperty().bind(heightProperty().divide(8));
-        rect.layoutXProperty().bind(widthProperty().divide(8).multiply(x));
-        rect.layoutYProperty().bind(heightProperty().divide(8).multiply(y));
-        rect.setFill(color.deriveColor(0, 1, 1, 0.5));
-        highlighted.getChildren().add(rect);
     }
 
     public void updatePieceDraws(LogicBoard board) {
