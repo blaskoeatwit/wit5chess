@@ -12,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 public class VisualBoard extends Pane {
     private Pane pieceImages = new Pane();
     private Pane highlighted = new Pane();
+    private Pane promotionOptions = new Pane();
     private ImageView boardView;
 
     public VisualBoard(Scene scene) {
@@ -24,6 +25,7 @@ public class VisualBoard extends Pane {
         getChildren().add(boardView);
         getChildren().add(highlighted);
         getChildren().add(pieceImages);
+        getChildren().add(promotionOptions);
 
         // Set up resize listeners
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -43,6 +45,33 @@ public class VisualBoard extends Pane {
     }
 
     public void removeHighlights() { highlighted.getChildren().clear(); }
+    
+    public void removePromotionOptions() { promotionOptions.getChildren().clear(); }
+    
+    // Display a promotion option at the specified cell
+    public void showPromotionOption(Cell cell, String pieceName, boolean isWhite) {      
+        // Create a background highlight for the promotion option
+        Rectangle background = new Rectangle();
+        background.widthProperty().bind(widthProperty().divide(8));
+        background.heightProperty().bind(heightProperty().divide(8));
+        background.layoutXProperty().bind(widthProperty().divide(8).multiply(cell.x()));
+        background.layoutYProperty().bind(heightProperty().divide(8).multiply(cell.y()));
+        background.setFill(Color.LIGHTGRAY.deriveColor(0, 1, 1, 1.));
+        promotionOptions.getChildren().add(background);
+        
+        // Create the piece image for the promotion option
+        String colorPrefix = isWhite ? "White" : "Black";
+        String imagePath = "file:src/main/java/Resources/" + colorPrefix + pieceName + ".png";
+        ImageView pieceView = new ImageView(new Image(imagePath));
+        pieceView.preserveRatioProperty().set(true);
+        pieceView.fitHeightProperty().bind(heightProperty().divide(8));
+        
+        // Bind piece to cell center
+        pieceView.layoutXProperty().bind(widthProperty().divide(8).multiply(cell.x()));
+        pieceView.layoutYProperty().bind(heightProperty().divide(8).multiply(cell.y()));
+        
+        promotionOptions.getChildren().add(pieceView);
+    }
 
     public void highlightCell(Cell cell, Color color) {
         if (cell == null) { return; }
@@ -81,16 +110,21 @@ public class VisualBoard extends Pane {
         double startX = getLayoutX();
         double startY = getLayoutY();
         double boardSize = getPrefWidth();
-        if (sceneX < startX || sceneX > startX + boardSize || 
-            sceneY < startY || sceneY > startY + boardSize) {
+        if (sceneX <= startX || sceneX >= startX + boardSize || 
+            sceneY <= startY || sceneY >= startY + boardSize) {
             return null;
         }
+        Cell cell = cellUnbounded(sceneX, sceneY);
+        return cell;
+    }
+
+    public Cell cellUnbounded(double sceneX, double sceneY) {
+        double startX = getLayoutX();
+        double startY = getLayoutY();
+        double boardSize = getPrefWidth();
         double squareSize = boardSize / 8;
-        int x = (int)((sceneX - startX) / squareSize);
-        int y = (int)((sceneY - startY) / squareSize);
-        if (x < 0 || x >= 8 || y < 0 || y >= 8) {
-            return null;
-        }
+        int x = (int) Math.floor((sceneX - startX) / squareSize);
+        int y = (int) Math.floor((sceneY - startY) / squareSize);
         return new Cell(x, y);
     }
 

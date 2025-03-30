@@ -64,6 +64,7 @@ public class LogicBoard {
         if (piece == null) return false;
         if (piece.isWhite() != isWhiteTurn) return false;
         if (piece.move(this, newCell)) {
+
             lastMove = newCell;
             nextTurn();
             return true;
@@ -72,6 +73,7 @@ public class LogicBoard {
     }
 
     public boolean isValidMove(Cell curCell, Cell newCell) {
+        if (curCell.equals(newCell)) return false;
         Piece piece = getCell(curCell);
         if (piece == null) return false;
         if (piece.isWhite() != isWhiteTurn()) return false;
