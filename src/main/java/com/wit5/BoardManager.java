@@ -54,7 +54,7 @@ public class BoardManager {
                 visualBoard.updatePieceDraws(logicBoard);
             }
             
-            // End game if checkmate
+            // End game detection
             if (logicBoard.isCheckmate()) { 
                 visualBoard.showGameOverScreen(!logicBoard.isWhiteTurn(), true);
                 gameOver = true;

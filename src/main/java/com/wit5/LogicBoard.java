@@ -149,15 +149,13 @@ public class LogicBoard {
     }
 
     public boolean isCheckmate() {
-        if (!inCheck()) return false;
-        return countValidMoves() == 0;
+        return inCheck() && countValidMoves() == 0;
     }
     
     // Verified by copying stalemate here
     // https://www.chess.com/blog/JCH2021/the-fastest-stalemate-possible-in-chess
     public boolean isStalemate() {
-        if (inCheck()) return false;
-        return countValidMoves() == 0;
+        return !inCheck() && countValidMoves() == 0;
     }
 
     private int countValidMoves() {
