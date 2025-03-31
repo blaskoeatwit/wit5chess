@@ -3,7 +3,6 @@ import com.wit5.BoardManager.Cell;
 import com.wit5.LogicBoard;
 
 public class Rook extends Piece {
-    protected boolean hasMoved = false;
     public Rook(Cell curCell, boolean white) { super("Rook", curCell, white); }
 
     @Override

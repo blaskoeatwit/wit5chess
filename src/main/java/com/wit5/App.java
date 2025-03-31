@@ -14,7 +14,7 @@ public class App extends Application {
         stage.setTitle("Chess");
         stage.setScene(scene);
         stage.show();
-        BoardManager boardManager = new BoardManager(root, scene);
+        new BoardManager(root, scene);
     }
     
     public static void main(String[] args) {

@@ -3,7 +3,6 @@ import com.wit5.BoardManager.Cell;
 import com.wit5.LogicBoard;
 
 public class King extends Piece {
-
     public King(Cell curCell, boolean white) { super("King", curCell, white); }
 
     @Override

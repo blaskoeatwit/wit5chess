@@ -6,14 +6,13 @@ import javafx.scene.paint.Color;
 
 // Handles all interactions between the javafx visuals and the backend LogicBoard
 public class BoardManager {
-    // Base colors for highlights
-    public static final Color selectionColor = Color.BLACK;
-    public static final Color lastMoveColor = Color.BLUE;
-    public static final Color validMoveColor = Color.GREEN;
-    public static final Color captureColor = Color.RED;
-    public static final Color promotionColor = Color.GOLD;
-    
     public record Cell(int x, int y) {}
+
+    private final Color selectionColor = Color.BLACK;
+    private final Color lastMoveColor = Color.BLUE;
+    private final Color validMoveColor = Color.GREEN;
+    private final Color captureColor = Color.RED;
+    private final Color promotionColor = Color.GOLD;
     
     private LogicBoard logicBoard;
     private VisualBoard visualBoard;
@@ -110,9 +109,7 @@ public class BoardManager {
                         if (newCell.equals(logicBoard.lastMove())) { highlightLast = false; }
                         if (logicBoard.getCell(newCell) != null) {
                             visualBoard.highlightCell(newCell, captureColor);
-                        } else {
-                            visualBoard.highlightCell(newCell, validMoveColor);
-                        }
+                        } else visualBoard.highlightCell(newCell, validMoveColor);
                     }
                 }
             }
