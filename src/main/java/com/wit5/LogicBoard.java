@@ -149,25 +149,15 @@ public class LogicBoard {
     }
 
     public boolean isCheckmate() {
-        // For each piece on the board
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                Cell curCell = new Cell(x, y);
-                Piece piece = getCell(curCell);
-                if (piece == null) continue;
-                // Which you can control
-                if (piece.isWhite() != isWhiteTurn()) continue;
-                // Check if there is any move
-                for (int xAttempt = 0; xAttempt < 8; xAttempt++) {
-                    for (int yAttempt = 0; yAttempt < 8; yAttempt++) {
-                        Cell newCell = new Cell(xAttempt, yAttempt);
-                        // Which is legal and ends the check
-                        if (piece.legalMove(this, newCell) && !moveSelfChecks(curCell, newCell)) return false;
-                    }
-                }
-            }
-        }
-        return true;
+        if (!inCheck()) return false;
+        return countValidMoves() == 0;
+    }
+    
+    // Verified by copying stalemate here
+    // https://www.chess.com/blog/JCH2021/the-fastest-stalemate-possible-in-chess
+    public boolean isStalemate() {
+        if (inCheck()) return false;
+        return countValidMoves() == 0;
     }
 
     private int countValidMoves() {
@@ -188,8 +178,4 @@ public class LogicBoard {
         }
         return count;
     }
-
-    // Verified by copying stalemate here
-    // https://www.chess.com/blog/JCH2021/the-fastest-stalemate-possible-in-chess
-    public boolean isStalemate() { return countValidMoves() == 0; }
 }
