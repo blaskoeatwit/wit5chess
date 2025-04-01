@@ -57,7 +57,9 @@ public class LogicBoard {
         this.isWhiteTurn = reference.isWhiteTurn();
         this.lastMove = reference.lastMove();
     }
-    
+    // Alias for the constructor which deep copies the board
+    public LogicBoard deepCopy() { return new LogicBoard(this); }
+
     public void nextTurn() { isWhiteTurn = !isWhiteTurn; }
     public boolean isWhiteTurn() { return isWhiteTurn; }
     public Cell lastMove() { return lastMove; }
@@ -71,29 +73,30 @@ public class LogicBoard {
         return oldPiece;
     }
 
-    // Alias for the constructor which deep copies the board
-    public LogicBoard deepCopy() { return new LogicBoard(this); }
-
     // Returns false if move failed, true otherwise
-    public boolean attemptMove(Cell curCell, Cell newCell) throws IndexOutOfBoundsException {
-        if (curCell.equals(newCell)) return false;
-        Piece piece = getCell(curCell);
-        if (piece == null) return false;
-        if (piece.isWhite() != isWhiteTurn()) return false;
-        if (moveSelfChecks(curCell, newCell)) return false;
-        if (!piece.move(this, newCell)) return false;
-        lastMove = newCell;
-        nextTurn();
-        return true;
+    public boolean attemptMove(Cell curCell, Cell newCell) {
+        try {
+            if (curCell.equals(newCell)) return false;
+            Piece piece = getCell(curCell);
+            if (piece == null) return false;
+            if (piece.isWhite() != isWhiteTurn()) return false;
+            if (moveSelfChecks(curCell, newCell)) return false;
+            if (!piece.move(this, newCell)) return false;
+            lastMove = newCell;
+            nextTurn();
+            return true;
+        } catch (IndexOutOfBoundsException e) { return false; }
     }
 
     public boolean isValidMove(Cell curCell, Cell newCell) {
-        if (curCell.equals(newCell)) return false;
-        Piece piece = getCell(curCell);
-        if (piece == null) return false;
-        if (piece.isWhite() != isWhiteTurn()) return false;
-        if (moveSelfChecks(curCell, newCell)) return false;
-        return piece.legalMove(this, newCell);
+        try {
+            if (curCell.equals(newCell)) return false;
+            Piece piece = getCell(curCell);
+            if (piece == null) return false;
+            if (piece.isWhite() != isWhiteTurn()) return false;
+            if (moveSelfChecks(curCell, newCell)) return false;
+            return piece.legalMove(this, newCell);
+        } catch (IndexOutOfBoundsException e) { return false; }
     }
 
     // Tests whether a path between two cells has pieces in the way

@@ -32,7 +32,7 @@ public abstract class Piece {
         board.setCell(newCell, this);
         board.setCell(curCell, null);
         curCell = newCell;
-        moveCount++;
+        moveCount += 1;
         return true;
     }
     
