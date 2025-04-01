@@ -25,7 +25,7 @@ public class VisualBoard extends Pane {
     public VisualBoard(Scene scene) {
         resizeBoard(scene.getWidth(), scene.getHeight());
 
-        boardView = new ImageView(new Image("file:src/main/java/Resources/tempTestBoard.png"));
+        boardView = new ImageView(new Image("file:src/main/java/Resources/Board.png"));
         boardView.fitWidthProperty().bind(widthProperty());
         boardView.fitHeightProperty().bind(heightProperty());
         
