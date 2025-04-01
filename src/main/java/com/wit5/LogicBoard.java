@@ -82,10 +82,10 @@ public class LogicBoard {
             if (piece.isWhite() != isWhiteTurn()) return false;
             if (moveSelfChecks(curCell, newCell)) return false;
             if (!piece.move(this, newCell)) return false;
-            lastMove = newCell;
-            nextTurn();
-            return true;
         } catch (IndexOutOfBoundsException e) { return false; }
+        lastMove = newCell;
+        nextTurn();
+        return true;
     }
 
     public boolean isValidMove(Cell curCell, Cell newCell) {

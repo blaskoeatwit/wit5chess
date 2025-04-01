@@ -6,14 +6,14 @@ import javafx.scene.paint.Color;
 
 // Handles all interactions between the javafx visuals and the backend LogicBoard
 public class BoardManager {
-    public record Cell(int x, int y) {}
-
+    
     private final Color selectionColor = Color.BLACK;
     private final Color lastMoveColor = Color.BLUE;
     private final Color validMoveColor = Color.GREEN;
     private final Color captureColor = Color.RED;
     private final Color promotionColor = Color.GOLD;
     
+    public record Cell(int x, int y) {}
     private LogicBoard logicBoard;
     private VisualBoard visualBoard;
 
@@ -67,7 +67,6 @@ public class BoardManager {
 
     // Returns true if a move was made, false otherwise
     public boolean selectCell(double sceneX, double sceneY) {
-        // If awaiting promotion, don't allow any other moves
         if (awaitingPromotion) return false;
         
         visualBoard.removeHighlights();
